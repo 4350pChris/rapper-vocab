@@ -22,4 +22,11 @@
 	export let artist;
 </script>
 
-<h1>{artist.name}</h1>
+<svelte:head>
+	<title>Artist - {artist.name}</title>
+</svelte:head>
+
+<img class="h-40 w-40 md:w-64 md:h-64 lg:h-80 lg:w-80 rounded-full" alt={artist.name} src={artist.image_url}>
+<h1 class="text-4xl mt-4">{artist.name}</h1>
+<p class="text-lg">Also known as: {artist.alternate_names.join(', ')}</p>
+
