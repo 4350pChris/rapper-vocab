@@ -1,38 +1,9 @@
-# create-svelte
+# Rapper Vocab
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte);
+Analyze the vocabulary of rappers. Built with SvelteKit and AWS.
 
-## Creating a project
+## AWS Setup
 
-If you're seeing this, you've probably already done this step. Congrats!
+1. `aws iam create-role --role-name RapperVocabLambdaRole \ --path "/service-role/" \ --assume-role-policy-document file://aws/trust-relationship.json`
 
-```bash
-# create a new project in the current directory
-npm init svelte@next
-
-# create a new project in my-app
-npm init svelte@next my-app
-```
-
-> Note: the `@next` is temporary
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-Before creating a production version of your app, install an [adapter](https://kit.svelte.dev/docs#adapters) for your target environment. Then:
-
-```bash
-npm run build
-```
-
-> You can preview the built app with `npm run preview`, regardless of whether you installed an adapter. This should _not_ be used to serve your app in production.
+2. `aws iam put-role-policy --role-name RapperVocabLambdaRole \ --policy-name RapperVocabRolePolicy \ --policy-document file://aws/role-policy.json`

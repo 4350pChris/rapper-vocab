@@ -4,3 +4,5 @@ node_modules
 /package
 /public
 .env*
+.vercel_build_output
+.vscode

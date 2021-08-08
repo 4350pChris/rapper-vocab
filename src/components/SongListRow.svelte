@@ -3,7 +3,7 @@
 </script>
 
 <a
-	class="flex flex-nowrap items-center rounded p-2 transition hover:bg-gray-100 dark:hover:bg-gray-700"
+	class="flex flex-nowrap items-center rounded p-2 transition hover:bg-gray-200 dark:hover:bg-gray-700"
 	href="/artists/{song.primary_artist.id}"
 >
 	<img

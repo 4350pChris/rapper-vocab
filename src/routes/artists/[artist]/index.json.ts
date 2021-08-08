@@ -1,9 +1,9 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
-export const get: RequestHandler<{ id: string }> = async ({ params }) => {
-	const { id } = params;
+export const get: RequestHandler<{ artist: string }> = async ({ params }) => {
+	const { artist } = params;
 
-	const url = 'https://api.genius.com/artists/' + id;
+	const url = 'https://api.genius.com/artists/' + artist;
 
 	const res = await fetch(url, {
 		headers: {
