@@ -15,8 +15,11 @@ const config = {
 	kit: {
 		// hydrate the <div id="svelte"> element in src/app.html
 		target: '#svelte',
-		adapter: vercel(),
+		adapter: vercel({ esbuild: (opts) => ({ external: ["canvas"], ...opts }) }),
 		vite: {
+			build: {
+				sourcemap: process.env.MODE !== 'production'
+			},
 			resolve: {
 				alias: {
 					$components: path.resolve('./src/components')

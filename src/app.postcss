@@ -12,5 +12,9 @@ input[type='textarea'] {
 	@apply rounded px-2 py-1 dark:bg-gray-700;
 }
 
+input:disabled, button:disabled {
+	@apply pointer-events-none;
+}
+
 @tailwind components;
 @tailwind utilities;
