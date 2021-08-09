@@ -2,7 +2,11 @@ import { DynamoDBClient, BatchWriteItemCommand, QueryCommand } from '@aws-sdk/cl
 
 const client = new DynamoDBClient({
 	region: 'eu-central-1',
-	endpoint: import.meta.env.DEV ? 'http://localhost:8000' : undefined
+	endpoint: import.meta.env.DEV ? 'http://localhost:8000' : undefined,
+	credentials: {
+		accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+		secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY
+	}
 });
 
 export async function getSongs(artist: string) {
