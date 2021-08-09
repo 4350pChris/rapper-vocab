@@ -1,5 +1,5 @@
 import { getSongs, putSongs } from '$lib/db';
-import { JSDOM } from 'jsdom';
+import { parseDocument, DomUtils } from 'htmlparser2';
 import type { RequestHandler } from '@sveltejs/kit';
 
 async function getPaginatedSongs(artist: string) {
@@ -26,10 +26,12 @@ async function getPaginatedSongs(artist: string) {
 async function crawlLyrics(songUrl: string) {
 	const res = await fetch(songUrl);
 	const html = await res.text();
-	const { document } = new JSDOM(html).window;
-	const lyrics = document.querySelector('.lyrics');
-	const text = lyrics?.textContent.trim();
-	return text;
+	const dom = parseDocument(html)
+	const found = DomUtils.findOne((elem) => elem.attribs.class === "lyrics", dom.childNodes)
+	if (found) {
+		const text = DomUtils.textContent(found).trim()
+		return text;
+	}
 }
 
 export const get: RequestHandler<{ artist: string }> = async ({ params }) => {
@@ -50,8 +52,10 @@ export const post: RequestHandler<{ artist: string }> = async ({ params }) => {
 			lyrics: await crawlLyrics(song.url),
 			...song
 		}));
-		const lyrics = await Promise.all(crawlRequests);
-		chunks.push(lyrics.filter(({ lyrics }) => !!lyrics));
+		const lyrics = (await Promise.all(crawlRequests)).filter(({ lyrics }) => !!lyrics);
+		if (lyrics.length) {
+			chunks.push(lyrics);
+		}
 	}
 
 	if (chunks.length) {
