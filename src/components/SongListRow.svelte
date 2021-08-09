@@ -4,6 +4,7 @@
 
 <a
 	class="flex flex-nowrap items-center rounded p-2 transition hover:bg-gray-200 dark:hover:bg-gray-700"
+	sveltekit:prefetch
 	href="/artists/{song.primary_artist.id}"
 >
 	<img
