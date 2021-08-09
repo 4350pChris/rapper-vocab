@@ -15,7 +15,7 @@ const config = {
 	kit: {
 		// hydrate the <div id="svelte"> element in src/app.html
 		target: '#svelte',
-		adapter: vercel({ esbuild: (opts) => ({ external: ["canvas"], ...opts }) }),
+	adapter: vercel({ esbuild: (opts) => ({ external: ["canvas", './xhr-sync-worker.js'], ...opts }) }),
 		vite: {
 			build: {
 				sourcemap: process.env.MODE !== 'production'

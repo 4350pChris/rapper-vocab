@@ -13,7 +13,7 @@
 	"devDependencies": {
 		"@aws-sdk/client-dynamodb": "^3.24.0",
 		"@sveltejs/adapter-vercel": "^1.0.0-next.27",
-		"@sveltejs/kit": "^1.0.0-next.141",
+		"@sveltejs/kit": "^1.0.0-next.143",
 		"@types/jsdom": "^16.2.13",
 		"@typescript-eslint/eslint-plugin": "^4.19.0",
 		"@typescript-eslint/parser": "^4.19.0",
@@ -22,7 +22,7 @@
 		"eslint": "^7.22.0",
 		"eslint-config-prettier": "^8.1.0",
 		"eslint-plugin-svelte3": "^3.2.0",
-		"jsdom": "^16.7.0",
+		"htmlparser2": "^6.1.0",
 		"node-fetch": "^2.6.1",
 		"postcss": "^8.3.5",
 		"postcss-load-config": "^3.1.0",
