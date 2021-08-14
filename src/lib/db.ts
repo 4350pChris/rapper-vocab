@@ -19,37 +19,32 @@ export async function getSongs(artist: string) {
 	return await client.send(command)
 }
 
-export async function putSongs(chunks: Record<string, any>[][]) {
-	const artist: Record<string, any> = chunks[0][0].primary_artist;
-	
-	return Promise.all(
-		chunks.map((chunk) => {
-			const command = new BatchWriteItemCommand({
-				RequestItems: {
-					rappers: [
-						{
-							PutRequest: {
-								Item: {
-									id: { N: artist.id.toString() },
-									name: { S: artist.name },
-									image_url: { S: artist.image_url }
-								}
-							}
+export async function putSongs(songs: Record<string, any>[]) {
+	const artist: Record<string, any> = songs[0].primary_artist;
+	const command = new BatchWriteItemCommand({
+		RequestItems: {
+			rappers: [
+				{
+					PutRequest: {
+						Item: {
+							id: { N: artist.id.toString() },
+							name: { S: artist.name },
+							image_url: { S: artist.image_url }
 						}
-					],
-					songs: chunk.map((song) => ({
-						PutRequest: {
-							Item: {
-								id: { N: song.id.toString() },
-								artistId: { N: song.primary_artist.id.toString() },
-								title: { S: song.title },
-								lyrics: { S: song.lyrics }
-							}
-						}
-					}))
+					}
 				}
-			});
-			return client.send(command);
-		})
-	);
+			],
+			songs: songs.map((song) => ({
+				PutRequest: {
+					Item: {
+						id: { N: song.id.toString() },
+						artistId: { N: song.primary_artist.id.toString() },
+						title: { S: song.title },
+						lyrics: { S: song.lyrics }
+					}
+				}
+			}))
+		}
+	});
+	return client.send(command);
 }
