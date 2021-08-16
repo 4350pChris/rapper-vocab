@@ -2,9 +2,9 @@ import { getSongs, putSongs } from "$lib/db"
 import { parseDocument, DomUtils } from "htmlparser2"
 import type { RequestHandler } from "@sveltejs/kit"
 
-const getPaginatedSongs = async (artist: string) => {
+const getPaginatedSongs = async (artist: number) => {
   const baseUrl = `https://api.genius.com/artists/${artist}/songs?sort=popularity`
-  const existing = (await getSongs(artist)).Items.map((v) => parseInt(v.id.N))
+  const existing = (await getSongs(artist)).Items.map((v) => parseInt(v.id))
 
   let page = 1
   const songs: Record<string, any>[] = []
@@ -19,7 +19,7 @@ const getPaginatedSongs = async (artist: string) => {
     page = json.next_page
     // filter out songs that are already in the db or do not have the specified artist as their primary artist
     const filtered = json.songs.filter(
-      ({ id, primary_artist }) => !existing.includes(id) && primary_artist.id === parseInt(artist)
+      ({ id, primary_artist }) => !existing.includes(id) && primary_artist.id === artist
     )
     songs.push(...filtered)
   }
@@ -48,13 +48,13 @@ const crawlLyrics = async (songUrl: string) => {
 // }
 
 export const get: RequestHandler<{ artist: string }> = async ({ params }) => {
-  const { artist } = params
+  const artist = parseInt(params.artist)
   const songs = await getSongs(artist)
   return { body: { songs: songs.Items } }
 }
 
 export const post: RequestHandler<{ artist: string }> = async ({ params }) => {
-  const { artist } = params
+  const artist = parseInt(params.artist)
 
   const songs = await getPaginatedSongs(artist)
 

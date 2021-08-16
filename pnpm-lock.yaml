@@ -2,6 +2,8 @@ lockfileVersion: 5.3
 
 specifiers:
   '@aws-sdk/client-dynamodb': ^3.24.0
+  '@aws-sdk/lib-dynamodb': ^3.26.0
+  '@aws-sdk/util-dynamodb': ^3.26.0
   '@sveltejs/adapter-vercel': ^1.0.0-next.27
   '@sveltejs/kit': ^1.0.0-next.151
   '@tailwindcss/line-clamp': ^0.2.1
@@ -29,6 +31,8 @@ specifiers:
 
 devDependencies:
   '@aws-sdk/client-dynamodb': 3.24.0
+  '@aws-sdk/lib-dynamodb': 3.26.0_600ff8df7bdeca23a1c09a50ce06658f
+  '@aws-sdk/util-dynamodb': 3.26.0
   '@sveltejs/adapter-vercel': 1.0.0-next.27
   '@sveltejs/kit': 1.0.0-next.151_svelte@3.42.1
   '@tailwindcss/line-clamp': 0.2.1_tailwindcss@2.2.7
@@ -341,6 +345,20 @@ packages:
       tslib: 2.3.0
     dev: true
 
+  /@aws-sdk/lib-dynamodb/3.26.0_600ff8df7bdeca23a1c09a50ce06658f:
+    resolution: {integrity: sha512-HO6zFRp+evzF1+a/avfUlfIXWaZTTy44XM3iA6Ta08Ucse5rPIlhSSKKFTHn4mi7Ky+fV6nC5dlB6OYvjArLXw==}
+    engines: {node: '>= 10.0.0'}
+    peerDependencies:
+      '@aws-sdk/client-dynamodb': ^3.0.0
+      '@aws-sdk/smithy-client': ^3.0.0
+      '@aws-sdk/types': ^3.0.0
+      '@aws-sdk/util-dynamodb': ^3.0.0
+    dependencies:
+      '@aws-sdk/client-dynamodb': 3.24.0
+      '@aws-sdk/util-dynamodb': 3.26.0
+      tslib: 2.3.0
+    dev: true
+
   /@aws-sdk/middleware-content-length/3.23.0:
     resolution: {integrity: sha512-ooyNeXZUtI16Qh/HfcwLWn7NB2HvM/XEajaQmVIJXbVy/D2+N82+0Jo2hY3DouuIJjoEv/KZ5Uia/cgCdfHrHQ==}
     engines: {node: '>= 10.0.0'}
@@ -575,6 +593,13 @@ packages:
     engines: {node: '>= 10.0.0'}
     dependencies:
       '@aws-sdk/shared-ini-file-loader': 3.23.0
+      tslib: 2.3.0
+    dev: true
+
+  /@aws-sdk/util-dynamodb/3.26.0:
+    resolution: {integrity: sha512-ZUbHNn0pUgg75aE2nK1EQ8NQpYDuC5U7qawsEQ4pDUhIBNhWRerfCRaK9EpR6xZ+W4nVOWpjv1jA0P7V/M0zBQ==}
+    engines: {node: '>= 10.0.0'}
+    dependencies:
       tslib: 2.3.0
     dev: true
 

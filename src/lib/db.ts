@@ -1,31 +1,33 @@
-import {
-  DynamoDBClient,
-  BatchWriteItemCommand,
-  GetItemCommand,
-  QueryCommand,
-  UpdateItemCommand
-} from "@aws-sdk/client-dynamodb"
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 
-const client = new DynamoDBClient({
+import {
+  DynamoDBDocumentClient,
+  BatchWriteCommand,
+  GetCommand,
+  QueryCommand,
+  UpdateCommand
+} from "@aws-sdk/lib-dynamodb"
+
+const client = DynamoDBDocumentClient.from(new DynamoDBClient({
   region: "eu-central-1",
   endpoint: import.meta.env.DEV ? "http://localhost:8000" : undefined,
   credentials: {
     accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
     secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY
   }
-})
+}))
 
-export async function getArtist(artist: string) {
-  const command = new GetItemCommand({
+export async function getArtist(artist: number) {
+  const command = new GetCommand({
     TableName: "rappers",
-    Key: { id: { N: artist } }
+    Key: { id: artist }
   })
   return client.send(command)
 }
 
-export async function putStats(artist: string) {
+export async function putStats(artist: number) {
   const lyrics = (await getSongs(artist)).Items.map(({ lyrics }) =>
-    lyrics.S.split(" ").filter((val) => val.length > 0)
+    lyrics.split(" ").filter((val) => val.length > 0)
   )
 
   const wordList = {} as { [word: string]: number }
@@ -47,45 +49,43 @@ export async function putStats(artist: string) {
     .slice(0, 100)
     .map(([word, val]) => [word, { N: val.toString() }])
 
-  const command = new UpdateItemCommand({
+  const command = new UpdateCommand({
     TableName: "rappers",
     Key: { id: { N: artist } },
     UpdateExpression: "set stats.uniques = :u, stats.words = :w, stats.top = :t",
     ExpressionAttributeValues: {
-      ":u": { N: Object.keys(wordList).length.toString() },
-      ":w": { N: count.toString() },
-      ":t": { M: Object.fromEntries(topHundred) }
+      ":u": Object.keys(wordList).length,
+      ":w": count,
+      ":t": Object.fromEntries(topHundred)
     },
     ReturnValues: "UPDATED_NEW"
   })
   return client.send(command)
 }
 
-export async function getSongs(artist: string) {
+export async function getSongs(artist: number) {
   const command = new QueryCommand({
     TableName: "songs",
     KeyConditionExpression: "#artist = :artist",
     ExpressionAttributeNames: { "#artist": "artistId" },
-    ExpressionAttributeValues: { ":artist": { N: artist } }
+    ExpressionAttributeValues: { ":artist": artist }
   })
   return client.send(command)
 }
 
 export async function putSongs(songs: Record<string, any>[]) {
   const artist: Record<string, any> = songs[0].primary_artist
-  const command = new BatchWriteItemCommand({
+  const command = new BatchWriteCommand({
     RequestItems: {
       rappers: [
         {
           PutRequest: {
             Item: {
-              id: { N: artist.id.toString() },
-              name: { S: artist.name },
-              image_url: { S: artist.image_url },
+              id: artist.id,
+              name: artist.name,
+              image_url: artist.image_url,
               stats: {
-                M: {
-                  words: { N: "0" }
-                }
+                words: 0
               }
             }
           }
@@ -94,10 +94,10 @@ export async function putSongs(songs: Record<string, any>[]) {
       songs: songs.map((song) => ({
         PutRequest: {
           Item: {
-            id: { N: song.id.toString() },
-            artistId: { N: song.primary_artist.id.toString() },
-            title: { S: song.title },
-            lyrics: { S: song.lyrics }
+            id: song.id,
+            artistId: song.primary_artist.id,
+            title: song.title,
+            lyrics: song.lyric
           }
         }
       }))
