@@ -1,16 +1,16 @@
 <script lang="ts">
   export let stats: {
-    uniques?: { N: number }
-    words?: { N: number }
-    top?: { M: { [word: string]: { N: number } } }
+    uniques?: number
+    words?: number
+    top?: { [word: string]: number }
   }
 
   let wordCount = 10
 
   let topWords = []
   $: if (stats?.top)
-    topWords = Object.entries(stats.top.M)
-      .sort((a, b) => b[1].N - a[1].N)
+    topWords = Object.entries(stats.top)
+      .sort((a, b) => b[1] - a[1])
       .slice(0, wordCount)
 </script>
 
@@ -18,14 +18,14 @@
   <h2>Stats</h2>
   {#if stats}
     <p class="my-4">
-      <span class="font-semibold">{stats.words?.N}</span>
+      <span class="font-semibold">{stats.words}</span>
       words in total out of which
-      <span class="font-semibold">{stats.uniques?.N}</span> are unique.
+      <span class="font-semibold">{stats.uniques}</span> are unique.
     </p>
     <h3 class="text-lg font-bold mb-2">Top {wordCount === 100 ? "hundred" : "ten"}</h3>
     <ol>
       {#each topWords as [word, count]}
-        <li>{word}: {count.N}</li>
+        <li>{word}: {count}</li>
       {/each}
     </ol>
     <button

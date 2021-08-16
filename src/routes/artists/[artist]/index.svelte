@@ -31,7 +31,7 @@
       ])
       return {
         props: {
-          artist: { ...artist, stats: lyricsInfo.stats?.M },
+          artist: { ...artist, stats: lyricsInfo.stats },
           songs
         }
       }
@@ -65,7 +65,7 @@
   const updateStats = async () => {
     const res = await fetch(`/artists/${artist.id}/stats`, { method: "POST" })
     const { stats } = await res.json()
-    artist = { ...artist, stats: stats.M }
+    artist = { ...artist, stats }
   }
 </script>
 
@@ -110,5 +110,5 @@
   <StatsOverview stats={artist.stats} />
 </section>
 <section class="text-center my-4" id="songs">
-  <SongOverview songs={songs.map(({ title }) => title.S)} />
+  <SongOverview songs={songs.map(({ title }) => title)} />
 </section>
