@@ -7,8 +7,8 @@
 		"preview": "svelte-kit preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
-		"lint": "prettier --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
-		"format": "prettier --write --plugin-search-dir=. ."
+		"lint": "prettier --check --plugin-search-dir=. src && eslint --ignore-path .gitignore src",
+		"format": "prettier --write --plugin-search-dir=. src"
 	},
 	"devDependencies": {
 		"@aws-sdk/client-dynamodb": "^3.24.0",
