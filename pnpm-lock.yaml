@@ -4,6 +4,7 @@ specifiers:
   '@aws-sdk/client-dynamodb': ^3.24.0
   '@sveltejs/adapter-vercel': ^1.0.0-next.27
   '@sveltejs/kit': ^1.0.0-next.151
+  '@tailwindcss/line-clamp': ^0.2.1
   '@types/jsdom': ^16.2.13
   '@typescript-eslint/eslint-plugin': ^4.19.0
   '@typescript-eslint/parser': ^4.19.0
@@ -20,6 +21,7 @@ specifiers:
   prettier-plugin-svelte: ^2.3.1
   svelte: ^3.42.1
   svelte-check: ^2.2.4
+  svelte-click-outside: ^1.0.0
   svelte-preprocess: ^4.7.4
   tailwindcss: ^2.2.7
   tslib: ^2.3.0
@@ -29,6 +31,7 @@ devDependencies:
   '@aws-sdk/client-dynamodb': 3.24.0
   '@sveltejs/adapter-vercel': 1.0.0-next.27
   '@sveltejs/kit': 1.0.0-next.151_svelte@3.42.1
+  '@tailwindcss/line-clamp': 0.2.1_tailwindcss@2.2.7
   '@types/jsdom': 16.2.13
   '@typescript-eslint/eslint-plugin': 4.28.5_514553717ff968e20f6d1c6e521f8616
   '@typescript-eslint/parser': 4.28.5_eslint@7.31.0+typescript@4.3.5
@@ -45,6 +48,7 @@ devDependencies:
   prettier-plugin-svelte: 2.3.1_prettier@2.3.1+svelte@3.42.1
   svelte: 3.42.1
   svelte-check: 2.2.4_37293621677b5d618de2277fe18a7b92
+  svelte-click-outside: 1.0.0
   svelte-preprocess: 4.7.4_0230e0d6e615847d9e5f4e7b2174f0e6
   tailwindcss: 2.2.7_7b69a43ec4689fa7484dee35f79a7806
   tslib: 2.3.0
@@ -767,6 +771,14 @@ packages:
       vite: 2.4.4
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@tailwindcss/line-clamp/0.2.1_tailwindcss@2.2.7:
+    resolution: {integrity: sha512-Hq2KJY1+T2v7jw/mnT3mnC7CKbp5kj1XTqzSb2xbEt1j+JkxIR6N3ijsN/WevZtsKJfVE1KOejA/3IRKuhZEsQ==}
+    peerDependencies:
+      tailwindcss: '>=2.0.0'
+    dependencies:
+      tailwindcss: 2.2.7_7b69a43ec4689fa7484dee35f79a7806
     dev: true
 
   /@trysound/sax/0.1.1:
@@ -2828,6 +2840,10 @@ packages:
       - sass
       - stylus
       - sugarss
+    dev: true
+
+  /svelte-click-outside/1.0.0:
+    resolution: {integrity: sha512-TVDn5Vd8L0WI0Y9BFh/2I7judkIqYCbFKkGwGl/f8D0inwBFNyU0weKhrbJY4VQtYnWriq0NPl+mIYGisgALbw==}
     dev: true
 
   /svelte-hmr/0.14.7_svelte@3.42.1:

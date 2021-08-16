@@ -31,7 +31,7 @@
       ])
       return {
         props: {
-          artist: { ...lyricsInfo, ...artist },
+          artist: { ...artist, stats: lyricsInfo.stats?.M },
           songs
         }
       }
@@ -51,6 +51,7 @@
   export let songs: Record<string, any>[]
 
   let loading = false
+  let fullDescription = false
 
   const analyzeLyrics = async () => {
     loading = true
@@ -63,7 +64,8 @@
 
   const updateStats = async () => {
     const res = await fetch(`/artists/${artist.id}/stats`, { method: "POST" })
-    artist = { ...artist, ...(await res.json()) }
+    const { stats } = await res.json()
+    artist = { ...artist, stats: stats.M }
   }
 </script>
 
@@ -71,36 +73,42 @@
   <title>Artist - {artist.name}</title>
 </svelte:head>
 
-<img
-  class="h-40 w-40 md:w-64 md:h-64 lg:h-80 lg:w-80 rounded-full"
-  class:animate-pulse={loading}
-  alt={artist.name}
-  src={artist.image_url}
-/>
-<h1 class="text-4xl mt-4">{artist.name}</h1>
-<button
-    class="my-4 bg-white dark:bg-gray-700 ring-1 py-2 px-4 text-lg rounded uppercase transition hover:bg-gray-200 dark:hover:bg-gray-700"
-    on:click={analyzeLyrics}
-    disabled={loading}
+<section>
+  <img
+    class="float-left mr-4 h-40 w-40 md:w-64 md:h-64 lg:h-80 lg:w-80 rounded-full"
+    class:animate-pulse={loading}
+    alt={artist.name}
+    src={artist.image_url}
+  />
+  <h1 class="text-4xl mt-4">{artist.name}</h1>
+  {#if artist.alternate_names.length}
+  <div class="my-4">
+    <h3 class="font-semibold">Also known as</h3>
+    <p>
+      {artist.alternate_names.join(", ")}
+    </p>
+  </div>
+  {/if}
+  <div>
+  <div class:line-clamp-4={!fullDescription}>
+    {@html artist.description.html}
+  </div>
+  <button class="max-w-min whitespace-nowrap my-2" on:click={() => (fullDescription = !fullDescription)}
+    >Show {fullDescription ? "less" : "more"}</button
   >
+</div>
+  <button class="my-4" on:click={analyzeLyrics} disabled={loading}>
     {#if loading}
       updating...
     {:else}
-      update songs
+      update stats
     {/if}
   </button>
-{#if artist.alternate_names.length}
-  <p class="text-center my-2 text-gray-700 dark:text-gray-300 text-lg">
-    Also known as
-    <br />
-    <span>
-      {artist.alternate_names.join(", ")}
-    </span>
-  </p>
-{/if}
-<section>
-  <StatsOverview uniques={artist.uniques?.N} />
 </section>
-<section class="text-center my-4">
+
+<section id="stats">
+  <StatsOverview stats={artist.stats} />
+</section>
+<section class="text-center my-4" id="songs">
   <SongOverview songs={songs.map(({ title }) => title.S)} />
 </section>

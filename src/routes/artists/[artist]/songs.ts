@@ -30,7 +30,11 @@ const crawlLyrics = async (songUrl: string) => {
   const res = await fetch(songUrl)
   const html = await res.text()
   const dom = parseDocument(html)
-  const found = DomUtils.findOne((elem) => elem.attribs.class === "lyrics" || elem.attribs.class?.startsWith("Lyrics__Container"), dom.childNodes)
+  const found = DomUtils.findOne(
+    (elem) =>
+      elem.attribs.class === "lyrics" || elem.attribs.class?.startsWith("Lyrics__Container"),
+    dom.childNodes
+  )
   if (found) {
     const text = DomUtils.textContent(found).trim()
     return text
@@ -56,7 +60,10 @@ export const post: RequestHandler<{ artist: string }> = async ({ params }) => {
 
   const crawlRequests = songs.map(async (song) => {
     const raw = await crawlLyrics(song.url)
-    const lyrics = raw?.replace(/\n+/g, " ").replace(/[^\w\s]/g, "").toLowerCase()
+    const lyrics = raw
+      ?.replace(/\n+/g, " ")
+      .replace(/[\s,.!?]/g, " ")
+      .toLowerCase()
     return {
       lyrics,
       ...song
