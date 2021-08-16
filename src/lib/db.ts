@@ -1,4 +1,10 @@
-import { DynamoDBClient, BatchWriteItemCommand, GetItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb"
+import {
+  DynamoDBClient,
+  BatchWriteItemCommand,
+  GetItemCommand,
+  QueryCommand,
+  UpdateItemCommand
+} from "@aws-sdk/client-dynamodb"
 
 const client = new DynamoDBClient({
   region: "eu-central-1",
@@ -10,34 +16,49 @@ const client = new DynamoDBClient({
 })
 
 export async function getArtist(artist: string) {
-	const command = new GetItemCommand({
+  const command = new GetItemCommand({
     TableName: "rappers",
-    Key: { id: { N: artist } },
+    Key: { id: { N: artist } }
   })
   return client.send(command)
 }
 
 export async function putStats(artist: string) {
-  const lyrics = (await getSongs(artist)).Items.map(({ lyrics }) => lyrics.S.split(" "))
-	
-	const wordList = {} as {[word: string]: number}
-	
-  lyrics.forEach(words => words.forEach(word => {
-    if (word in wordList) {
-      wordList[word] += 1
-    } else {
-      wordList[word] = 1
-    }
-  }))
+  const lyrics = (await getSongs(artist)).Items.map(({ lyrics }) =>
+    lyrics.S.split(" ").filter((val) => val.length > 0)
+  )
 
-	const command = new UpdateItemCommand({
-		TableName: "rappers",
-		Key: { id: { N: artist } },
-		UpdateExpression: "set uniques = :u",
-		ExpressionAttributeValues: { ":u": { N: Object.keys(wordList).length.toString() } },
-		ReturnValues: "UPDATED_NEW"
-	})
-	return client.send(command)
+  const wordList = {} as { [word: string]: number }
+  let count = 0
+
+  lyrics.forEach((words) =>
+    words.forEach((word) => {
+      count += 1
+      if (word in wordList) {
+        wordList[word] += 1
+      } else {
+        wordList[word] = 1
+      }
+    })
+  )
+
+  const topHundred = Object.entries(wordList)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 100)
+    .map(([word, val]) => [word, { N: val.toString() }])
+
+  const command = new UpdateItemCommand({
+    TableName: "rappers",
+    Key: { id: { N: artist } },
+    UpdateExpression: "set stats.uniques = :u, stats.words = :w, stats.top = :t",
+    ExpressionAttributeValues: {
+      ":u": { N: Object.keys(wordList).length.toString() },
+      ":w": { N: count.toString() },
+      ":t": { M: Object.fromEntries(topHundred) }
+    },
+    ReturnValues: "UPDATED_NEW"
+  })
+  return client.send(command)
 }
 
 export async function getSongs(artist: string) {
@@ -60,7 +81,12 @@ export async function putSongs(songs: Record<string, any>[]) {
             Item: {
               id: { N: artist.id.toString() },
               name: { S: artist.name },
-              image_url: { S: artist.image_url }
+              image_url: { S: artist.image_url },
+              stats: {
+                M: {
+                  words: { N: "0" }
+                }
+              }
             }
           }
         }

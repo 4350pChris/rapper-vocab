@@ -4,14 +4,12 @@
   let allShown = false
 
   let sorted = []
-  $: sorted = allShown
-    ? [...songs].sort((a, b) => a.localeCompare(b))
-    : songs.slice(0, 3)
+  $: sorted = allShown ? [...songs].sort((a, b) => a.localeCompare(b)) : songs.slice(0, 3)
 </script>
 
 <h2>Songs</h2>
 {#if sorted.length}
-  <ul class="list-none">
+  <ul>
     {#each sorted as song}
       <li>{song}</li>
     {/each}
@@ -23,7 +21,7 @@
   <p>No songs yet.</p>
 {/if}
 <button
-  class="transition rounded hover:bg-gray-200 dark:hover:bg-gray-700 my-2 px-4 py-2 uppercase"
+  class="my-2"
   on:click={() => (allShown = !allShown)}
 >
   Show {allShown ? "fewer" : "all"}
