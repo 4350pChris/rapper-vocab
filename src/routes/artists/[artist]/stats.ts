@@ -4,7 +4,7 @@ import type { RequestHandler } from "@sveltejs/kit"
 export const get: RequestHandler<{ artist: string }> = async ({ params }) => {
   const { artist } = params
   const result = await getArtist(artist)
-  return { body: result?.Item }
+  return { body: result.Item }
 }
 
 export const post: RequestHandler<{ artist: string }> = async ({ params }) => {

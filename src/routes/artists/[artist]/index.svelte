@@ -78,22 +78,8 @@
   src={artist.image_url}
 />
 <h1 class="text-4xl mt-4">{artist.name}</h1>
-{#if artist.alternate_names.length}
-  <p class="text-center my-2 text-gray-700 dark:text-gray-300 text-lg">
-    Also known as
-    <br />
-    <span>
-      {artist.alternate_names.join(", ")}
-    </span>
-  </p>
-{/if}
-<section class="mt-4">
-  <StatsOverview uniques={artist.uniques?.N} />
-</section>
-<section class="text-center my-4">
-  <SongOverview songs={songs.map(({ title }) => title.S)} />
-  <button
-    class="mt-2 bg-white dark:bg-gray-700 ring-1 my-2 py-2 px-4 text-lg rounded uppercase transition hover:bg-gray-200 dark:hover:bg-gray-700"
+<button
+    class="my-4 bg-white dark:bg-gray-700 ring-1 py-2 px-4 text-lg rounded uppercase transition hover:bg-gray-200 dark:hover:bg-gray-700"
     on:click={analyzeLyrics}
     disabled={loading}
   >
@@ -103,4 +89,18 @@
       update songs
     {/if}
   </button>
+{#if artist.alternate_names.length}
+  <p class="text-center my-2 text-gray-700 dark:text-gray-300 text-lg">
+    Also known as
+    <br />
+    <span>
+      {artist.alternate_names.join(", ")}
+    </span>
+  </p>
+{/if}
+<section>
+  <StatsOverview uniques={artist.uniques?.N} />
+</section>
+<section class="text-center my-4">
+  <SongOverview songs={songs.map(({ title }) => title.S)} />
 </section>
