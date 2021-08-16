@@ -10,12 +10,6 @@
 </script>
 
 <h2>Songs</h2>
-<button
-  class="transition rounded hover:bg-gray-200 dark:hover:bg-gray-700 my-2 px-4 py-2 uppercase"
-  on:click={() => (allShown = !allShown)}
->
-  Show {allShown ? "fewer" : "all"}
-</button>
 {#if sorted.length}
   <ul class="list-none">
     {#each sorted as song}
@@ -28,3 +22,9 @@
 {:else}
   <p>No songs yet.</p>
 {/if}
+<button
+  class="transition rounded hover:bg-gray-200 dark:hover:bg-gray-700 my-2 px-4 py-2 uppercase"
+  on:click={() => (allShown = !allShown)}
+>
+  Show {allShown ? "fewer" : "all"}
+</button>

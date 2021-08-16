@@ -27,11 +27,14 @@ const getPaginatedSongs = async (artist: string) => {
 }
 
 const crawlLyrics = async (songUrl: string) => {
+  console.log("crawling " + songUrl)
   const res = await fetch(songUrl)
   const html = await res.text()
   const dom = parseDocument(html)
+  console.log("HTML length: " + html.length)
   const found = DomUtils.findOne((elem) => elem.attribs.class === "lyrics", dom.childNodes)
   if (found) {
+    console.log("found lyrics")
     const text = DomUtils.textContent(found).trim()
     return text
   }
@@ -52,8 +55,10 @@ export const get: RequestHandler<{ artist: string }> = async ({ params }) => {
 export const post: RequestHandler<{ artist: string }> = async ({ params }) => {
   const { artist } = params
 
+  console.log("getting songs from genius")
   const songs = await getPaginatedSongs(artist)
 
+  console.log("starting crawler...")
   const crawlRequests = songs.map(async (song) => {
     const raw = await crawlLyrics(song.url)
     const lyrics = raw?.replace(/\n+/g, " ").replace(/[^\w\s]/g, "").toLowerCase()
@@ -66,6 +71,7 @@ export const post: RequestHandler<{ artist: string }> = async ({ params }) => {
   const lyrics = (await Promise.all(crawlRequests)).filter(({ lyrics }) => !!lyrics)
 
   if (lyrics.length) {
+    console.log(`writing ${lyrics.length} songs to DB`)
     await putSongs(lyrics)
   }
 
