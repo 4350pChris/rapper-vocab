@@ -97,7 +97,13 @@
     >Show {fullDescription ? "less" : "more"}</button
   >
 </div>
-  <button class="my-4" on:click={analyzeLyrics} disabled={loading}>
+  <button 
+    class="my-4 w-full"
+    class:bg-blue-100={!loading}
+    class:dark:bg-blue-800={!loading}
+    on:click={analyzeLyrics}
+    disabled={loading}
+  >
     {#if loading}
       updating...
     {:else}

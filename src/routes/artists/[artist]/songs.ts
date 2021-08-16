@@ -70,7 +70,8 @@ export const post: RequestHandler<{ artist: string }> = async ({ params }) => {
     }
   })
 
-  const lyrics = (await Promise.all(crawlRequests)).filter(({ lyrics }) => !!lyrics)
+  
+  const lyrics = (await Promise.all(crawlRequests)).filter((song) => song.lyrics !== undefined)
 
   if (lyrics.length) {
     await putSongs(lyrics)
