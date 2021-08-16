@@ -8,14 +8,16 @@ import {
   UpdateCommand
 } from "@aws-sdk/lib-dynamodb"
 
-const client = DynamoDBDocumentClient.from(new DynamoDBClient({
-  region: "eu-central-1",
-  endpoint: import.meta.env.DEV ? "http://localhost:8000" : undefined,
-  credentials: {
-    accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-    secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY
-  }
-}))
+const client = DynamoDBDocumentClient.from(
+  new DynamoDBClient({
+    region: "eu-central-1",
+    endpoint: import.meta.env.DEV ? "http://localhost:8000" : undefined,
+    credentials: {
+      accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+      secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY
+    }
+  })
+)
 
 export async function getArtist(artist: number) {
   const command = new GetCommand({
@@ -26,7 +28,8 @@ export async function getArtist(artist: number) {
 }
 
 export async function putStats(artist: number) {
-  const lyrics = (await getSongs(artist)).Items.map(({ lyrics }) =>
+  const { Items: items } = await getSongs(artist)
+  const lyrics = items.map(({ lyrics }) =>
     lyrics.split(" ").filter((val) => val.length > 0)
   )
 
@@ -47,11 +50,11 @@ export async function putStats(artist: number) {
   const topHundred = Object.entries(wordList)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 100)
-    .map(([word, val]) => [word, { N: val.toString() }])
+    .map(([word, val]) => [word, val])
 
   const command = new UpdateCommand({
     TableName: "rappers",
-    Key: { id: { N: artist } },
+    Key: { id: artist },
     UpdateExpression: "set stats.uniques = :u, stats.words = :w, stats.top = :t",
     ExpressionAttributeValues: {
       ":u": Object.keys(wordList).length,
@@ -84,9 +87,7 @@ export async function putSongs(songs: Record<string, any>[]) {
               id: artist.id,
               name: artist.name,
               image_url: artist.image_url,
-              stats: {
-                words: 0
-              }
+              stats: {}
             }
           }
         }
@@ -97,7 +98,7 @@ export async function putSongs(songs: Record<string, any>[]) {
             id: song.id,
             artistId: song.primary_artist.id,
             title: song.title,
-            lyrics: song.lyric
+            lyrics: song.lyrics
           }
         }
       }))
