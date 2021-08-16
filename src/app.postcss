@@ -1,20 +1,26 @@
 @tailwind base;
-
-body {
-	@apply transition-colors duration-300;
-	@apply subpixel-antialiased text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-black dark:bg-opacity-95;
-	@apply leading-normal tracking-normal text-base font-normal break-words;
-	@apply min-h-screen min-w-full overflow-auto;
-}
-
-input[type='text'],
-input[type='textarea'] {
-	@apply rounded px-2 py-1 dark:bg-gray-700;
-}
-
-input:disabled, button:disabled {
-	@apply pointer-events-none;
-}
-
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply transition-colors duration-300;
+    @apply subpixel-antialiased text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-black dark:bg-opacity-95;
+    @apply leading-normal tracking-normal text-base font-normal break-words;
+    @apply min-h-screen min-w-full overflow-auto;
+  }
+
+  input[type="text"],
+  input[type="textarea"] {
+    @apply rounded px-2 py-1 dark:bg-gray-700;
+  }
+
+  input:disabled,
+  button:disabled {
+    @apply pointer-events-none;
+  }
+
+  h2 {
+    @apply text-2xl;
+  }
+}
