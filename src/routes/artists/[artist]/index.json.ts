@@ -3,7 +3,7 @@ import type { RequestHandler } from "@sveltejs/kit"
 export const get: RequestHandler<{ artist: string }> = async ({ params }) => {
   const { artist } = params
 
-  const url = `https://api.genius.com/artists/${artist}?text_format=html`
+  const url = `https://api.genius.com/artists/${artist}?text_format=plain`
 
   const res = await fetch(url, {
     headers: {

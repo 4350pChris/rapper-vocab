@@ -62,14 +62,13 @@ export const post: RequestHandler<{ artist: string }> = async ({ params }) => {
     const raw = await crawlLyrics(song.url)
     const lyrics = raw
       ?.replace(/\n+/g, " ")
-      .replace(/[\s,.!?]/g, " ")
+      .replace(/[^\w']/g, " ")
       .toLowerCase()
     return {
       lyrics,
       ...song
     }
   })
-
   
   const lyrics = (await Promise.all(crawlRequests)).filter((song) => song.lyrics !== undefined)
 

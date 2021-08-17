@@ -7,7 +7,6 @@
   $: sorted = allShown ? [...songs].sort((a, b) => a.localeCompare(b)) : songs.slice(0, 3)
 </script>
 
-<h2>Songs</h2>
 {#if sorted.length}
   <ul>
     {#each sorted as song}
@@ -20,9 +19,6 @@
 {:else}
   <p>No songs yet.</p>
 {/if}
-<button
-  class="my-2"
-  on:click={() => (allShown = !allShown)}
->
+<button class="w-full my-2" on:click={() => (allShown = !allShown)}>
   Show {allShown ? "fewer" : "all"}
 </button>

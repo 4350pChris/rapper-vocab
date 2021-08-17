@@ -4,10 +4,7 @@
 
 @layer base {
   body {
-    @apply transition-colors duration-300;
-    @apply subpixel-antialiased text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-black dark:bg-opacity-95;
-    @apply leading-normal tracking-normal text-base font-normal break-words;
-    @apply min-h-screen min-w-full overflow-auto;
+    @apply transition-colors duration-300 font-sans subpixel-antialiased text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-black min-h-screen min-w-full overflow-auto;
   }
 
   input[type="text"],
@@ -25,6 +22,10 @@
   }
 
   h2 {
+    @apply text-5xl;
+  }
+
+  h3 {
     @apply text-2xl;
   }
 }
