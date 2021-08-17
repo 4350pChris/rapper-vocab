@@ -1,4 +1,5 @@
 const colors = require('tailwindcss/colors')
+const theme = require('tailwindcss/defaultTheme')
 
 const config = {
 	mode: 'jit',
@@ -10,6 +11,9 @@ const config = {
 				gray: colors.trueGray,
 				blue: colors.cyan,
 				green: colors.emerald,
+			},
+			fontFamily: {
+				sans: ["Montserrat", ...theme.fontFamily.sans]
 			}
 		}
 	},
