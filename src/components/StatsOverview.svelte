@@ -15,13 +15,13 @@
 </script>
 
 {#if stats}
-  <h3>Vocabulary</h3>
+  <h3 class="mb-2" id="vocabulary">Vocabulary</h3>
   <p class="mb-4">
     <span class="font-semibold">{stats.words}</span>
     words in total out of which
     <span class="font-semibold">{stats.uniques}</span> are unique.
   </p>
-  <h3 class="mb-2">Top {wordCount === 100 ? "hundred" : "ten"}</h3>
+  <h3 class="mb-2" id="top_words">Top {wordCount === 100 ? "hundred" : "ten"}</h3>
   <ol class="text-center">
     {#each topWords as [word, count]}
       <li class="text-left">
