@@ -14,27 +14,25 @@
       .slice(0, wordCount)
 </script>
 
-<div class="text-center">
-  <h2>Stats</h2>
-  {#if stats}
-    <p class="my-4">
-      <span class="font-semibold">{stats.words}</span>
-      words in total out of which
-      <span class="font-semibold">{stats.uniques}</span> are unique.
-    </p>
-    <h3 class="text-lg font-bold mb-2">Top {wordCount === 100 ? "hundred" : "ten"}</h3>
-    <ol>
-      {#each topWords as [word, count]}
-        <li>{word}: {count}</li>
-      {/each}
-    </ol>
-    <button
-      class="my-2"
-      on:click={() => (wordCount = wordCount === 100 ? 10 : 100)}
-    >
-      Show {wordCount === 100 ? "top ten" : "top hundred"}
-    </button>
-  {:else}
-    <p>No stats yet. Press update songs to start analyzing.</p>
-  {/if}
-</div>
+{#if stats}
+  <h3>Vocabulary</h3>
+  <p class="mb-4">
+    <span class="font-semibold">{stats.words}</span>
+    words in total out of which
+    <span class="font-semibold">{stats.uniques}</span> are unique.
+  </p>
+  <h3 class="mb-2">Top {wordCount === 100 ? "hundred" : "ten"}</h3>
+  <ol class="text-center">
+    {#each topWords as [word, count]}
+      <li class="text-left">
+        <span class="font-mono">{count}</span>
+        <span class="font-semibold">{word}</span>
+      </li>
+    {/each}
+  </ol>
+  <button class="w-full my-2" on:click={() => (wordCount = wordCount === 100 ? 10 : 100)}>
+    Show {wordCount === 100 ? "top ten" : "top hundred"}
+  </button>
+{:else}
+  <p>No stats yet. Press update songs to start analyzing.</p>
+{/if}

@@ -44,6 +44,7 @@
 </script>
 
 <script lang="ts">
+  import ArtistHeader from "$components/ArtistHeader.svelte"
   import SongOverview from "$components/SongOverview.svelte"
   import StatsOverview from "$components/StatsOverview.svelte"
 
@@ -51,7 +52,11 @@
   export let songs: Record<string, any>[]
 
   let loading = false
-  let fullDescription = false
+  let scroll: number
+  let sticky
+  $: sticky = scroll > 0
+  let imgClasses: string
+  $: imgClasses = sticky ? "h-24 w-24 md:w-32 md:h-32 lg:w-40 lg:h-40" : "h-40 w-40 md:w-64 md:h-64 lg:h-80 lg:w-80"
 
   const analyzeLyrics = async () => {
     loading = true
@@ -73,48 +78,41 @@
   <title>Artist - {artist.name}</title>
 </svelte:head>
 
-<section>
+<svelte:window bind:scrollY={scroll} />
+
+<div class:sticky class:top-16={sticky} class="dark:bg-black bg-gray-100">
   <img
-    class="float-left mr-4 h-40 w-40 md:w-64 md:h-64 lg:h-80 lg:w-80 rounded-full"
+    class="transition-all mt-2 float-left mx-4 rounded-full {imgClasses}"
     class:animate-pulse={loading}
     alt={artist.name}
     src={artist.image_url}
   />
-  <h1 class="text-4xl mt-4">{artist.name}</h1>
-  {#if artist.alternate_names.length}
-  <div class="my-4">
-    <h3 class="font-semibold">Also known as</h3>
-    <p>
-      {artist.alternate_names.join(", ")}
-    </p>
+  <div class="flex items-center justify-between border-gray-300" class:border-b={sticky} class:dark:border-gray-500={sticky}>
+    <h1 class="py-4 text-4xl mr-4">
+      {artist.name}
+    </h1>
+    <button
+      class:bg-blue-300={!loading}
+      class:dark:bg-blue-800={!loading}
+      on:click={analyzeLyrics}
+      disabled={loading}
+    >
+      {#if loading}
+        updating...
+      {:else}
+        update stats
+      {/if}
+    </button>
   </div>
-  {/if}
-  <div>
-  <div class:line-clamp-4={!fullDescription}>
-    {@html artist.description.html}
-  </div>
-  <button class="max-w-min whitespace-nowrap my-2" on:click={() => (fullDescription = !fullDescription)}
-    >Show {fullDescription ? "less" : "more"}</button
-  >
 </div>
-  <button 
-    class="my-4 w-full"
-    class:bg-blue-100={!loading}
-    class:dark:bg-blue-800={!loading}
-    on:click={analyzeLyrics}
-    disabled={loading}
-  >
-    {#if loading}
-      updating...
-    {:else}
-      update stats
-    {/if}
-  </button>
-</section>
-
-<section id="stats">
-  <StatsOverview stats={artist.stats} />
-</section>
-<section class="text-center my-4" id="songs">
-  <SongOverview songs={songs.map(({ title }) => title)} />
-</section>
+<ArtistHeader {artist} />
+<div class="flex flex-col items-center mx-auto max-w-lg">
+  <section id="stats" class="w-full">
+    <h2 class="my-4">Stats</h2>
+    <StatsOverview stats={artist.stats} />
+  </section>
+  <section id="songs" class="w-full">
+    <h2 class="my-4">Songs</h2>
+    <SongOverview songs={songs.map(({ title }) => title)} />
+  </section>
+</div>

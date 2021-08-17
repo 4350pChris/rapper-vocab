@@ -5,7 +5,6 @@
   let query = ""
   let shown = false
   let triggerEl
-  let keyListener
 
   const getSongs = async () => {
     const res = await fetch(`/search/${query}.json`)
