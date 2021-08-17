@@ -68,7 +68,7 @@ const sanitizeLyrics = (artist: string, text: string) => {
 export const get: RequestHandler<{ artist: string }> = async ({ params }) => {
   const artist = parseInt(params.artist)
   const songs = await getSongs(artist)
-  return { body: { songs: songs.Items } }
+  return { body: { songs: songs.Items?.map(({ lyrics, ...song }) => song) } }
 }
 
 export const post: RequestHandler<{ artist: string }> = async ({ params }) => {
