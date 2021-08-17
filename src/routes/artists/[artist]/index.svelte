@@ -53,7 +53,7 @@
 
   let loading = false
   let scroll: number
-  let sticky
+  let sticky: boolean
   $: sticky = scroll > 0
   let imgClasses: string
   $: imgClasses = sticky ? "h-24 w-24 md:w-32 md:h-32 lg:w-40 lg:h-40" : "h-40 w-40 md:w-64 md:h-64 lg:h-80 lg:w-80"

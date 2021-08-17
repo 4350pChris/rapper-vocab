@@ -54,7 +54,7 @@ const removeVersesNotByRapper = (rapper: string, text: string) => {
   return sanitized
 }
 
-const removeExtraCharacters = (text: string) => text.replace(/\n+/g, " ").replace(/[^\w']/g, " ")
+const removeExtraCharacters = (text: string) => text.replace(/[\n\s]+/g, " ").replace(/[^\u00F0-\u02AF\w']/g, " ")
 
 const removeBrackets = (text: string) => text.replace(/\[[^\]]*\]/g, " ")
 
@@ -62,7 +62,7 @@ const sanitizeLyrics = (artist: string, text: string) => {
   const onlyByMainArtist = removeVersesNotByRapper(artist, text)
   const noBrackets = removeBrackets(onlyByMainArtist)
   const noExtras = removeExtraCharacters(noBrackets)
-  return noExtras
+  return noExtras.toLowerCase().trim()
 }
 
 export const get: RequestHandler<{ artist: string }> = async ({ params }) => {

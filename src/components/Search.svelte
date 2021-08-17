@@ -4,7 +4,9 @@
 
   let query = ""
   let shown = false
-  let triggerEl
+  let triggerEl: Element
+  let loading = false
+  let songs = []
 
   const getSongs = async () => {
     const res = await fetch(`/search/${query}.json`)
@@ -17,11 +19,18 @@
       shown = false
     }
   }
+
+  const handleSubmit = async () => {
+    loading = true
+    shown = true
+    songs = await getSongs()
+    loading = false
+  }
 </script>
 
 <svelte:body on:keydown={handleKeydown} />
 <div class="relative">
-  <form on:submit|preventDefault={() => (shown = true)}>
+  <form on:submit|preventDefault={handleSubmit}>
     <input class="bg-gray-300 dark:bg-gray-800" type="text" bind:value={query} />
     <button
       bind:this={triggerEl}
@@ -40,9 +49,9 @@
     >
       {#if shown}
         <h3 class="text-center text-lg m-4">Search Results</h3>
-        {#await getSongs()}
+        {#if loading}
           <p class="text-center py-2">Loading...</p>
-        {:then songs}
+        {:else if songs.length}
           <ul>
             {#each songs as song}
               <li>
@@ -50,9 +59,9 @@
               </li>
             {/each}
           </ul>
-        {:catch}
+        {:else}
           <p class="text-center py-2">Could not load data.</p>
-        {/await}
+        {/if}
       {/if}
     </div>
   </ClickOutside>
