@@ -36,16 +36,34 @@ const crawlLyrics = async (songUrl: string) => {
     dom.childNodes
   )
   if (found) {
-    const text = DomUtils.textContent(found).trim()
+    const text = DomUtils.innerText(found).trim()
     return text
   }
 }
 
-// TODO: do this later, I'm too stupid rn
-// const removeVersesNotByRapper = (rapper: string, text: string) => {
-// 	const matches = Array.from(text.matchAll(/\[[^\]]*\]/g))
-// 	const sanitized = matches.reduce((result, match) => match.)
-// }
+const removeVersesNotByRapper = (rapper: string, text: string) => {
+	const matches = Array.from(text.matchAll(/\[[^\]]*\]/g))
+	const sanitized = matches.reduce((acc, val, i) => {
+    if (!val[0].includes(":") || val[0].includes(rapper)) {
+      const end = matches[i + 1] ? matches[i + 1].index : undefined
+      const part = text.slice(val.index, end)
+      acc += part
+    }
+    return acc
+  }, "")
+  return sanitized
+}
+
+const removeExtraCharacters = (text: string) => text.replace(/\n+/g, " ").replace(/[^\w']/g, " ")
+
+const removeBrackets = (text: string) => text.replace(/\[[^\]]*\]/g, " ")
+
+const sanitizeLyrics = (artist: string, text: string) => {
+  const onlyByMainArtist = removeVersesNotByRapper(artist, text)
+  const noBrackets = removeBrackets(onlyByMainArtist)
+  const noExtras = removeExtraCharacters(noBrackets)
+  return noExtras
+}
 
 export const get: RequestHandler<{ artist: string }> = async ({ params }) => {
   const artist = parseInt(params.artist)
@@ -59,18 +77,17 @@ export const post: RequestHandler<{ artist: string }> = async ({ params }) => {
   const songs = await getPaginatedSongs(artist)
 
   const crawlRequests = songs.map(async (song) => {
-    const raw = await crawlLyrics(song.url)
-    const lyrics = raw
-      ?.replace(/\n+/g, " ")
-      .replace(/[^\w']/g, " ")
-      .toLowerCase()
+    const lyrics = await crawlLyrics(song.url)
     return {
       lyrics,
       ...song
     }
   })
   
-  const lyrics = (await Promise.all(crawlRequests)).filter((song) => song.lyrics !== undefined)
+  const results = await Promise.all(crawlRequests)
+  const lyrics = results
+    .filter(song => !!song.lyrics)
+    .map((song: { [key: string]: any }) => ({ ...song, lyrics: sanitizeLyrics(song.primary_artist.name, song.lyrics) }))
 
   if (lyrics.length) {
     await putSongs(lyrics)
