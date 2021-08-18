@@ -54,7 +54,7 @@
         {:else if songs.length}
           <ul>
             {#each songs as song}
-              <li>
+              <li on:click={() => (shown = false)}>
                 <SongListRow {song} />
               </li>
             {/each}

@@ -54,7 +54,7 @@ const removeVersesNotByRapper = (rapper: string, text: string) => {
   return sanitized
 }
 
-const removeExtraCharacters = (text: string) => text.replace(/[\n\s]+/g, " ").replace(/[^\u00F0-\u02AF\w'-]/g, " ")
+const removeExtraCharacters = (text: string) => text.replace(/[\n\s]+/g, " ").replace(/[^\u00C0-\u02AF\w'-]/g, " ")
 
 const removeBrackets = (text: string) => text.replace(/\[[^\]]*\]/g, " ")
 
