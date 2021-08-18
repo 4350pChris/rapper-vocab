@@ -13,7 +13,8 @@ const config = {
 				green: colors.emerald,
 			},
 			fontFamily: {
-				sans: ["Montserrat", ...theme.fontFamily.sans]
+				sans: ["Montserrat", ...theme.fontFamily.sans],
+				mono: ["'Fira Mono'", ...theme.fontFamily.mono]
 			}
 		}
 	},

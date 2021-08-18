@@ -2,7 +2,9 @@
   export let stats: {
     uniques?: number
     words?: number
-    top?: { [word: string]: number }
+    top?: { [word: string]: number },
+    average?: number
+    median?: number
   }
 
   let wordCount = 10
@@ -16,12 +18,19 @@
 
 {#if stats}
   <h3 class="mb-2" id="vocabulary">Vocabulary</h3>
-  <p class="mb-4">
-    <span class="font-semibold">{stats.words}</span>
+  <p>
+    <span class="font-medium font-mono">{stats.words}</span>
     words in total out of which
-    <span class="font-semibold">{stats.uniques}</span> are unique.
+    <span class="font-medium font-mono">{stats.uniques}</span>
+    are unique.
   </p>
-  <h3 class="mb-2" id="top_words">Top {wordCount === 100 ? "hundred" : "ten"}</h3>
+  <p>
+    The average word length is <span class="font-medium font-mono">{stats.average.toFixed(2)}</span>
+  </p>
+  <p>
+    The median word length is <span class="font-medium font-mono">{stats.median}</span>
+  </p>
+  <h3 class="mt-4 mb-2" id="top_words">Top {wordCount === 100 ? "hundred" : "ten"}</h3>
   <ol class="text-center">
     {#each topWords as [word, count]}
       <li class="text-left">
