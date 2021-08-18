@@ -41,12 +41,34 @@ const crawlLyrics = async (songUrl: string) => {
   }
 }
 
-const removeVersesNotByRapper = (rapper: string, text: string) => {
+/**
+ *
+ * @param artist THe artists name - in some cases this might be two artists like 'Bob Marley & the Wailers'
+ * @param text The complete lyrics which should contain square brackets in front of each verse
+ * @returns
+ */
+const removeVersesNotByArtist = (artist: string, text: string) => {
+  // get the positions of each square brackets denoting verses
   const matches = Array.from(text.matchAll(/\[[^\]]*\]/g))
   const sanitized = matches.reduce((acc, val, i) => {
-    if (!val[0].includes(":") || val[0].includes(rapper)) {
-      const end = matches[i + 1] ? matches[i + 1].index : undefined
-      const part = text.slice(val.index, end)
+    const end = matches[i + 1] ? matches[i + 1].index : undefined
+    const part = text.slice(val.index, end)
+    const token = val[0]
+    // tokens like [Verse 1] don't have to be checked
+    if (!token.includes(":")) {
+      acc += part
+      return acc
+    }
+    // token looks like [Verse 1: artist] so we have to check if the current artist is the one this verse belongs to
+    // split at the colon to get the artist
+    const colonIndex = token.indexOf(":")
+    const verseArtists = token.slice(colonIndex + 1)
+    // when there's an & in the token, the first artist should be part of the primary artist(s)
+    const mainVerseArtist = verseArtists.split(" & ")[0].trim().replace("]", "")
+    // in case the primary artist contains an ampersand the verse's artist needs to be one of them
+    const primaryArtists = artist.split(" & ")
+
+    if (primaryArtists.includes(mainVerseArtist)) {
       acc += part
     }
     return acc
@@ -63,7 +85,7 @@ const removeExtraCharacters = (text: string) =>
 const removeBrackets = (text: string) => text.replace(/\[[^\]]*\]/g, " ")
 
 const sanitizeLyrics = (artist: string, text: string) => {
-  const onlyByMainArtist = removeVersesNotByRapper(artist, text)
+  const onlyByMainArtist = removeVersesNotByArtist(artist, text)
   const noBrackets = removeBrackets(onlyByMainArtist)
   const noExtras = removeExtraCharacters(noBrackets)
   return noExtras.toLowerCase().trim()
