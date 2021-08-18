@@ -16,9 +16,9 @@
       <li>And {songs.length - 3} more</li>
     {/if}
   </ul>
+  <button class="w-full my-2" on:click={() => (allShown = !allShown)}>
+    Show {allShown ? "fewer" : "all"}
+  </button>
 {:else}
   <p>No songs yet.</p>
 {/if}
-<button class="w-full my-2" on:click={() => (allShown = !allShown)}>
-  Show {allShown ? "fewer" : "all"}
-</button>
