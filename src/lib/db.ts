@@ -29,9 +29,7 @@ export async function getArtist(artist: number) {
 
 export async function putStats(artist: number) {
   const { Items: items } = await getSongs(artist)
-  const lyrics = items.map(({ lyrics }) =>
-    lyrics.split(" ").filter((val) => val.length > 0)
-  )
+  const lyrics = items.map(({ lyrics }) => lyrics.split(" ").filter((val) => val.length > 0))
 
   const wordList = {} as { [word: string]: number }
   let count = 0
@@ -47,19 +45,33 @@ export async function putStats(artist: number) {
     })
   )
 
-  const topHundred = Object.entries(wordList)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 100)
-    .map(([word, val]) => [word, val])
+  const sorted = Object.entries(wordList).sort((a, b) => b[1] - a[1])
+
+  const topHundred = sorted.slice(0, 100)
+
+  const avgLength = sorted.reduce((acc, [word]) => acc + word.length, 0) / sorted.length
+
+  const calcMedian = () => {
+    const middle = Math.floor(sorted.length / 2)
+    if (sorted.length % 2 === 0) {
+      return (sorted[middle - 1][0].length + sorted[middle][0].length) / 2
+    }
+    return sorted[middle][0].length
+  }
+
+  const medianLength = calcMedian()
 
   const command = new UpdateCommand({
     TableName: "rappers",
     Key: { id: artist },
-    UpdateExpression: "set stats.uniques = :u, stats.words = :w, stats.top = :t",
+    UpdateExpression:
+      "set stats.uniques = :u, stats.words = :w, stats.top = :t, stats.average = :a, stats.median = :m",
     ExpressionAttributeValues: {
       ":u": Object.keys(wordList).length,
       ":w": count,
-      ":t": Object.fromEntries(topHundred)
+      ":t": Object.fromEntries(topHundred),
+      ":a": avgLength,
+      ":m": medianLength
     },
     ReturnValues: "UPDATED_NEW"
   })
