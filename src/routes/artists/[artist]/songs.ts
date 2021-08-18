@@ -42,8 +42,8 @@ const crawlLyrics = async (songUrl: string) => {
 }
 
 const removeVersesNotByRapper = (rapper: string, text: string) => {
-	const matches = Array.from(text.matchAll(/\[[^\]]*\]/g))
-	const sanitized = matches.reduce((acc, val, i) => {
+  const matches = Array.from(text.matchAll(/\[[^\]]*\]/g))
+  const sanitized = matches.reduce((acc, val, i) => {
     if (!val[0].includes(":") || val[0].includes(rapper)) {
       const end = matches[i + 1] ? matches[i + 1].index : undefined
       const part = text.slice(val.index, end)
@@ -54,7 +54,11 @@ const removeVersesNotByRapper = (rapper: string, text: string) => {
   return sanitized
 }
 
-const removeExtraCharacters = (text: string) => text.replace(/[\n\s]+/g, " ").replace(/[^\u00C0-\u02AF\w'-]/g, " ")
+const removeExtraCharacters = (text: string) =>
+  text
+    .replace(/[\n\s]+/g, " ")
+    .replace(/[^\u00C0-\u02AF\w'-]/g, " ")
+    .replace(" - ", " ")
 
 const removeBrackets = (text: string) => text.replace(/\[[^\]]*\]/g, " ")
 
@@ -83,11 +87,14 @@ export const post: RequestHandler<{ artist: string }> = async ({ params }) => {
       ...song
     }
   })
-  
+
   const results = await Promise.all(crawlRequests)
   const lyrics = results
-    .filter(song => !!song.lyrics)
-    .map((song: { [key: string]: any }) => ({ ...song, lyrics: sanitizeLyrics(song.primary_artist.name, song.lyrics) }))
+    .filter((song) => !!song.lyrics)
+    .map((song: { [key: string]: any }) => ({
+      ...song,
+      lyrics: sanitizeLyrics(song.primary_artist.name, song.lyrics)
+    }))
 
   if (lyrics.length) {
     await putSongs(lyrics)
