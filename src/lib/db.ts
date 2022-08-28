@@ -5,7 +5,8 @@ import {
   BatchWriteCommand,
   GetCommand,
   QueryCommand,
-  UpdateCommand
+  UpdateCommand,
+  ScanCommand
 } from "@aws-sdk/lib-dynamodb"
 
 const client = DynamoDBDocumentClient.from(
@@ -18,6 +19,13 @@ const client = DynamoDBDocumentClient.from(
     }
   })
 )
+
+export async function getArtists() {
+  const command = new ScanCommand({
+    TableName: "rappers"
+  })
+  return client.send(command)
+}
 
 export async function getArtist(artist: number) {
   const command = new GetCommand({
