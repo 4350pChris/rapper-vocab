@@ -1,4 +1,4 @@
-import { getArtists } from "$lib/db"
+import { getArtists } from "$lib/artists"
 import type { RequestHandler } from "@sveltejs/kit"
 
 export const get: RequestHandler = async () => {

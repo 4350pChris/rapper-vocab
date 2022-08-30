@@ -1,4 +1,4 @@
-import { getSongs, putSongs } from "$lib/db"
+import { getSongs, putSongs } from "$lib/songs"
 import { parseDocument, DomUtils } from "htmlparser2"
 import type { RequestHandler } from "@sveltejs/kit"
 
