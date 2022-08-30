@@ -23,13 +23,13 @@
   class="-mx-4 px-2 sm:px-4 py-2 mb-6 dark:bg-black bg-gray-100"
 >
   <img
-    class="transition-all float-left mx-4 rounded-full {imgClasses}"
+    class="transition-all float-left mx-4 p-4 rounded-full {imgClasses} circle-shaped"
     class:animate-pulse={loading}
     alt={artist.name}
     src={artist.image_url}
   />
   <div class="flex flex-wrap items-center justify-between border-gray-300">
-    <h1 class="mb-2 text-4xl mr-4">
+    <h1 class="mb-2 text-4xl mx-4">
       {artist.name}
     </h1>
     <button
