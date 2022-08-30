@@ -44,19 +44,14 @@
 </script>
 
 <script lang="ts">
-  import ArtistHeader from "$components/ArtistHeader.svelte"
+  import ArtistInfo from "$components/ArtistInfo.svelte"
   import SongOverview from "$components/SongOverview.svelte"
   import StatsOverview from "$components/StatsOverview.svelte"
+  import ArtistHeader from "$components/ArtistHeader.svelte"
 
   export let artist: Record<string, any>
   export let songs: Record<string, any>[]
-
   let loading = false
-  let scroll: number
-  let sticky: boolean
-  $: sticky = scroll > 0
-  let imgClasses: string
-  $: imgClasses = sticky ? "h-20 w-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40" : "h-40 w-40 md:w-64 md:h-64 lg:h-80 lg:w-80"
 
   const analyzeLyrics = async () => {
     loading = true
@@ -78,41 +73,12 @@
   <title>Artist - {artist.name}</title>
 </svelte:head>
 
-<svelte:window bind:scrollY={scroll} />
-
-<div class:sticky class:top-16={sticky} class:border-b={sticky} class:dark:border-gray-500={sticky} class="-mx-4 px-2 sm:px-4 py-2 mb-6 dark:bg-black bg-gray-100">
-  <img
-    class="transition-all float-left mx-4 rounded-full {imgClasses}"
-    class:animate-pulse={loading}
-    alt={artist.name}
-    src={artist.image_url}
-  />
-  <div class="flex flex-wrap items-center justify-between border-gray-300">
-    <h1 class="mb-2 text-4xl mr-4">
-      {artist.name}
-    </h1>
-    <button
-      class:bg-blue-300={!loading}
-      class:dark:bg-blue-800={!loading}
-      on:click={analyzeLyrics}
-      disabled={loading}
-    >
-      {#if loading}
-        updating...
-      {:else}
-        update stats
-      {/if}
-    </button>
-  </div>
-</div>
-<ArtistHeader {artist} />
+<ArtistHeader {artist} {loading} on:click={analyzeLyrics} />
+<ArtistInfo {artist} />
 <div class="flex flex-col items-center mx-auto max-w-lg">
   <section id="stats" class="w-full">
-    <h2 class="my-4">
-      Stats
-      <span class="my-2 text-xl font-semibold">
-        {songs.length} songs analyzed
-      <span/>
+    <h2 class="my-4 text-lg font-semibold">
+      {songs.length} songs analyzed
     </h2>
     <StatsOverview stats={artist.stats} />
   </section>
